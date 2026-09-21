@@ -1,10 +1,7 @@
 package com.brunolopes.usuario.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "usuario")
+@Builder
 
 public class Usuario implements UserDetails {
 
@@ -31,12 +29,12 @@ public class Usuario implements UserDetails {
     private String senha;
     @Column(name = "email")
     private String email;
-    @OneToOne(cascade = CascadeType.ALL) // relação em cascata = no momento que eu excluir o usuário, o endereço será excluído automaticamente
+    @OneToMany(cascade = CascadeType.ALL) // relação em cascata = no momento que eu excluir o usuário, o endereço será excluído automaticamente
     @JoinColumn(name = "endereco_id", referencedColumnName = "id")
-    private com.brunolopes.usuario.infrastructure.entity.Endereco endereco;
+    private List<Endereco> endereco;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_id")
-    private List<com.brunolopes.usuario.infrastructure.entity.Telefone> telefone;
+    private List<Telefone> telefone;
 
     @Override //anotação que significa "Substituir" e diz que esse metodo veio de outro lugar
     public Collection<? extends GrantedAuthority> getAuthorities() {
